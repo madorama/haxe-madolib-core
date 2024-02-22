@@ -10,9 +10,15 @@ import madolib.geom.Bounds;
 
 using madolib.extensions.DifferExt;
 
-typedef HitPosition = {
-    start: Vector2,
-    end: Option<Vector2>,
+@:structInit
+class HitPosition {
+    public final start: Vector2;
+    public final end: Option<Vector2>;
+
+    public inline function new(start: Vector2, end: Option<Vector2>) {
+        this.start = start;
+        this.end = end;
+    }
 }
 
 typedef Rect = {
