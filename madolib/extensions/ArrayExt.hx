@@ -251,6 +251,21 @@ class ArrayExt {
         return result;
     }
 
+    public inline static function dropUntil<T>(self: Array<T>, f: T -> Bool): Array<T> {
+        var done = false;
+        final result = [];
+        for(v in self) {
+            if(done) {
+                result.push(v);
+                continue;
+            }
+            if(f(v)) continue;
+            done = true;
+            result.push(v);
+        }
+        return result;
+    }
+
     public inline static function average<T: Float>(self: Array<T>): Float
         return if(self.length == 0) {
             0.;
@@ -315,6 +330,12 @@ class ArrayExt {
     extern overload public inline static function minValue<T>(self: Array<T>, mapper: T -> String): Option<T>
         return minBy(self, (a, b) -> StringExt.compare(mapper(a), mapper(b)));
 
+    public inline static function max<T: Float>(self: Array<T>): Option<T>
+        return minValue(self, x -> x);
+
+    public inline static function min<T: Float>(self: Array<T>): Option<T>
+        return maxValue(self, x -> x);
+
     public inline static function zip<T1, T2>(self: Array<T1>, other: Array<T2>): Array<Tuple<T1, T2>> {
         final length = Math.min(self.length, other.length);
         return [for(i in 0...length) Tuple.of(self[i], other[i])];
@@ -331,6 +352,39 @@ class ArrayExt {
         }
         return Tuple.of(r1, r2);
     }
+
+    public inline static function sample<T>(self: Array<T>, ?random: Random): T
+        return (random ?? Random.gen).choice(self);
+
+    public inline static function shuffle<T>(self: Array<T>, ?random: Random): Array<T>
+        return (random ?? Random.gen).shuffle(self);
+
+    inline static function scoreSort<T: {score: Float}>(self: Array<T>, isAscent: Bool = true): Array<T>
+        return self.sorted((x, y) -> if(isAscent) FloatExt.compare(x.score, y.score) else FloatExt.compare(y.score, x.score));
+
+    inline static function toScoredArray<T>(self: Array<T>, scoreElement: T -> Float): Array<{item: T, score: Float}>
+        return self.map(x -> {
+            item: x,
+            score: scoreElement(x),
+        });
+
+    public inline static function findBestValue<T>(self: Array<T>, scoreElement: T -> Float): Option<T>
+        return if(self.length == 0) None else Some(self.toScoredArray(scoreElement).scoreSort()[self.length - 1].item);
+
+    public inline static function findNearestValue<T>(self: Array<T>, targetScore: Float, scoreElement: T -> Float): Option<T>
+        return if(self.length == 0) None else Some(self.toScoredArray(x -> Math.abs(scoreElement(x) - targetScore)).scoreSort()[0].item);
+
+    public inline static function findNearestValues<T>(self: Array<T>, targetScore: Float, scoreElement: T -> Float): Array<T>
+        return if(self.length == 0) {
+            [];
+        } else {
+            final arr = self.toScoredArray(x -> Math.abs(scoreElement(x) - targetScore)).scoreSort();
+            final minScore = arr[0].score;
+            return [for(x in arr) {
+                if(x.score > minScore) break;
+                x.item;
+            }];
+        }
 }
 
 class IntArrayExt {
