@@ -27,11 +27,11 @@ private class LazyImpl<T> {
     }
 }
 
+@:forward(value)
 abstract Lazy<T>(LazyImpl<T>) {
     public inline function new(factory: () -> T)
         this = new LazyImpl(factory);
 
-    @:to function to(): T {
+    @:to function to(): T
         return this.value;
-    }
 }
