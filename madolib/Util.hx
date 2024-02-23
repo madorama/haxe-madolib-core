@@ -1,6 +1,9 @@
 package madolib;
 
+import differ.math.Vector;
 import hxmath.math.IntVector2;
+import hxmath.math.Vector2;
+import madolib.Option.OptionExt;
 
 class Util {
     public inline static function coordToId(x: Int, y: Int, width: Int): Int
@@ -25,4 +28,25 @@ class Util {
         }
         return result;
     }
+
+    public inline static function downcast<T: {}, S: T>(value: T, c: Class<S>): Null<S> {
+        #if js
+        return if(Std.isOfType(value, c)) {
+            cast value;
+        } else {
+            null;
+        }
+        #else
+        return Std.downcast(value, c);
+        #end
+    }
+
+    public inline static function tryDowncast<T: {}, S: T>(value: T, c: Class<S>): Option<S>
+        return OptionExt.ofValue(downcast(value, c));
+
+    public inline static function toVector(v: Vector2): Vector
+        return new Vector(v.x, v.y);
+
+    public inline static function toVector2(v: Vector): Vector2
+        return new Vector2(v.x, v.y);
 }
