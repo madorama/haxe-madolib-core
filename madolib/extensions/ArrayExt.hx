@@ -33,7 +33,7 @@ class ArrayExt {
             result;
         }
 
-    public inline static function mapi<T>(self: Array<T>, f: Int -> T -> T): Array<T>
+    public inline static function mapi<T, R>(self: Array<T>, f: Int -> T -> R): Array<R>
         return [for(i in 0...self.length) f(i, self[i])];
 
     public inline static function each<T>(self: Array<T>, f: T -> Void) {
