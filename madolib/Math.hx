@@ -159,6 +159,15 @@ class Math {
     public inline static function floor(v: Float): Int
         return #if heaps hxd.Math.floor(v) #else std.Math.floor(v) #end;
 
+    public inline static function floorTo(v: Float, decimals: Int): Float {
+        return if(decimals <= 0) {
+            floor(v);
+        } else {
+            final x = pow(10, decimals);
+            std.Math.ffloor(v * x) / x;
+        }
+    }
+
     public inline static function pow(v: Float, exp: Float): Float
         return #if heaps hxd.Math.pow(v, exp) #else std.Math.pow(v, exp) #end;
 
