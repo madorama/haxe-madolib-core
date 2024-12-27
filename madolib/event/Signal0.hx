@@ -40,6 +40,10 @@ private class Signal0Impl implements Disposable {
         callbacks = [];
     }
 
+    public inline function clear() {
+        callbacks = [];
+    }
+
     inline function sortPriority() {
         if(!requiresSort) return;
         callbacks.sort((s1, s2) -> {
@@ -100,7 +104,7 @@ private class Signal0Impl implements Disposable {
     }
 }
 
-@:forward(add, remove, dispose, disposed)
+@:forward(add, remove, dispose, disposed, clear)
 abstract Signal0(Signal0Impl) from Signal0Impl {
     public inline function new()
         this = new Signal0Impl();
