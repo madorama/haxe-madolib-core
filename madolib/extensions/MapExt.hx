@@ -54,8 +54,9 @@ class MapExt {
 
     public inline static function update<K, V>(self: Map<K, V>, key: K, f: Null<V> -> V): V {
         final v = self.get(key);
-        self.set(key, f(v));
-        return v;
+        final newValue = f(v);
+        self.set(key, newValue);
+        return newValue;
     }
 
     public inline static function isEmpty<K, V>(self: Map<K, V>): Bool
