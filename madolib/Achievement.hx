@@ -17,7 +17,7 @@ typedef AchievementData = {
 class Achievement {
     var data: Map<String, AchievementData> = [];
 
-    public final onAchieved = new Signal<String>();
+    public final onAchieved = new Signal<AchievementData>();
 
     public function new(data: Map<String, AchievementData>) {
         this.data = data;
@@ -27,7 +27,7 @@ class Achievement {
         final achievement = data.get(id);
         if(achievement != null) {
             achievement.achieved = true;
-            onAchieved(id);
+            onAchieved(achievement);
         }
     }
 
