@@ -6,6 +6,14 @@ import madolib.Option;
 using madolib.extensions.ArrayExt;
 
 class ArrayExt {
+    public inline static function fastInsert<T>(self: Array<T>, index: Int, value: T) {
+        if(index >= self.length - 1) {
+            self[self.length] = value;
+        } else {
+            self.insert(index, value);
+        }
+    }
+
     public inline static function isEmpty<T>(self: Array<T>): Bool
         return self.length == 0;
 
