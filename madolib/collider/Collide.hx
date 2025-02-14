@@ -87,11 +87,10 @@ class Collide {
         return test != null;
     }
 
-    public inline static function polyVsRect(pos: Vector2, polygon: Polygon, rect: Rect): Bool {
-        final rect = Polygon.rectangle(rect.x, rect.y, rect.width, rect.height);
-        rect.rotation = rect.rotation;
+    public inline static function polyVsRect(pos: Vector2, polygon: Polygon, rect: Rect, rectCentered: Bool = false): Bool {
+        final newRect = Polygon.rectangle(rect.x, rect.y, rect.width, rect.height, rectCentered);
         final newPoly = new Polygon(pos.x, pos.y, polygon.transformedVertices);
-        return Collision.shapeWithShape(newPoly, rect) != null;
+        return Collision.shapeWithShape(newRect, newPoly) != null;
     }
 
     public inline static function polyVsPoly(posA: Vector2, a: Polygon, posB: Vector2, b: Polygon): Bool {
