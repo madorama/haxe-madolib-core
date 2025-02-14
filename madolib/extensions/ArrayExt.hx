@@ -135,6 +135,42 @@ class ArrayExt {
         return result;
     }
 
+    public inline static function removeByFirst<T>(self: Array<T>, equal: T -> Bool): Array<T> {
+        final result = self.copy();
+        result.fastRemoveByFirst(equal);
+        return result;
+    }
+
+    public inline static function fastRemoveByFirst<T>(self: Array<T>, equal: T -> Bool): Array<T> {
+        var i = 0;
+        while(i < self.length) {
+            if(equal(self[i])) {
+                self.splice(i, 1);
+                break;
+            }
+            i++;
+        }
+        return self;
+    }
+
+    public inline static function removeByLast<T>(self: Array<T>, equal: T -> Bool): Array<T> {
+        final result = self.copy();
+        result.fastRemoveByLast(equal);
+        return result;
+    }
+
+    public inline static function fastRemoveByLast<T>(self: Array<T>, equal: T -> Bool): Array<T> {
+        var i = self.length - 1;
+        while(i >= 0) {
+            if(equal(self[i])) {
+                self.splice(i, 1);
+                break;
+            }
+            i--;
+        }
+        return self;
+    }
+
     public inline static function removeAll<T>(self: Array<T>, value: T): Array<T> {
         final result = self.copy();
         var i = 0;
@@ -148,12 +184,25 @@ class ArrayExt {
         return result;
     }
 
+    public inline static function fastRemoveAll<T>(self: Array<T>, value: T): Array<T> {
+        while(self.remove(value)) {}
+        return self;
+    }
+
     public inline static function removeAt<T>(self: Array<T>, index: Int): Array<T>
         return switch index {
             case n if(self.inBounds(n)):
                 final result = self.copy();
                 result.splice(n, 1);
                 result;
+            default: self;
+        }
+
+    public inline static function fastRemoveAt<T>(self: Array<T>, index: Int): Array<T>
+        return switch index {
+            case n if(self.inBounds(n)):
+                self.splice(n, 1);
+                self;
             default: self;
         }
 
@@ -168,6 +217,18 @@ class ArrayExt {
             }
         }
         return result;
+    }
+
+    public inline static function fastRemoveBy<T>(self: Array<T>, equal: T -> Bool): Array<T> {
+        var i = 0;
+        while(i < self.length) {
+            if(equal(self[i])) {
+                self.splice(i, 1);
+            } else {
+                i++;
+            }
+        }
+        return self;
     }
 
     public inline static function compare<T>(self: Array<T>, other: Array<T>): Int {
