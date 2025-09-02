@@ -102,18 +102,16 @@ class ArrayExt {
     public inline static function all<T>(self: Array<T>, predicate: T -> Bool): Bool
         return forEach(self, predicate);
 
-    public inline static function find<T>(self: Array<T>, f: T -> Bool): Null<T> {
-        @:nullSafety(Off)
-        {
-            var result: Null<T> = null;
-            for(x in self) {
-                if(f(x)) {
-                    result = x;
-                    break;
-                }
+    @:generic
+    public inline static function find<T>(self: Array<T>, f: T -> Bool): Null<T> @:nullSafety(Off) {
+        var result: Null<T> = null;
+        for(x in self) {
+            if(f(x)) {
+                result = x;
+                break;
             }
-            return result;
         }
+        return result;
     }
 
     public inline static function findOption<T>(self: Array<T>, f: T -> Bool): Option<T> {
